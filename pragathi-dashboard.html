@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>School Analytics Dashboard v6</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0e1f;--glass:rgba(255,255,255,.07);--line:rgba(255,255,255,.13);--tx:#eef0ff;--mu:#a4abd0;--c1:#7c5cff;--c2:#22d3ee;--c3:#f472b6;--c4:#fbbf24;--c5:#34d399;--c6:#fb7185}
+*{box-sizing:border-box}
+body{font-family:Sora,system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden}
+body:before,body:after{content:"";position:fixed;width:520px;height:520px;border-radius:50%;filter:blur(110px);opacity:.35;z-index:-1;animation:float 18s ease-in-out infinite alternate}
+body:before{background:var(--c1);top:-160px;left:-120px}body:after{background:var(--c3);bottom:-200px;right:-140px;animation-delay:-9s}
+@keyframes float{to{transform:translate(90px,70px) scale(1.15)}}
+@media(prefers-reduced-motion:reduce){body:before,body:after{animation:none}}
+.side{position:fixed;inset:0 auto 0 0;width:236px;padding:20px 14px;background:rgba(10,14,31,.6);backdrop-filter:blur(18px);border-right:1px solid var(--line);z-index:20;display:flex;flex-direction:column;gap:6px}
+.brand{display:flex;gap:10px;align-items:center;padding:4px 8px 16px;font-weight:700}
+.logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--c1),var(--c3));display:grid;place-items:center;font-size:18px}
+.nv{display:flex;gap:12px;align-items:center;padding:11px 14px;border-radius:12px;color:var(--mu);border:0;background:none;text-align:left;font:inherit;font-size:14px}
+.nv:hover{color:var(--tx);background:var(--glass)}.nv.on{color:#fff;background:linear-gradient(135deg,rgba(124,92,255,.7),rgba(244,114,182,.5))}
+.nv i{width:18px;text-align:center}
+main{margin-left:236px;padding:22px 26px 40px}
+.gl{background:var(--glass);border:1px solid var(--line);border-radius:18px;backdrop-filter:blur(16px);padding:16px}
+.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.top h1{font-size:1.45rem;font-weight:700;margin:0}
+.ctl,.form-select,.form-control{background:rgba(255,255,255,.08)!important;border:1px solid var(--line)!important;color:var(--tx)!important;border-radius:10px;font-size:13px}
+.form-select option{color:#111}.form-control::placeholder{color:var(--mu)}
+.btn-g{background:linear-gradient(135deg,var(--c1),var(--c3));border:0;color:#fff;border-radius:10px;font-size:13px;padding:8px 14px}
+.btn-o{background:var(--glass);border:1px solid var(--line);color:var(--tx);border-radius:10px;font-size:13px;padding:8px 14px}
+.btn-g:hover,.btn-o:hover{color:#fff;filter:brightness(1.15)}
+.kpi{position:relative;overflow:hidden;border-radius:18px;padding:16px;color:#fff;min-height:104px}
+.kpi small{opacity:.85;font-size:12px}.kpi b{display:block;font-size:1.7rem;margin-top:2px}.kpi i{position:absolute;right:14px;top:14px;font-size:26px;opacity:.4}
+.k0{background:linear-gradient(135deg,#6d4aff,#9b7bff)}.k1{background:linear-gradient(135deg,#0891b2,#22d3ee)}.k2{background:linear-gradient(135deg,#db2777,#f472b6)}
+.k3{background:linear-gradient(135deg,#d97706,#fbbf24)}.k4{background:linear-gradient(135deg,#059669,#34d399)}.k5{background:linear-gradient(135deg,#2563eb,#60a5fa)}
+.k6{background:linear-gradient(135deg,#7c3aed,#c084fc)}.k7{background:linear-gradient(135deg,#ea580c,#fb923c)}.k8{background:linear-gradient(135deg,#e11d48,#fb7185)}
+.cw{height:280px;position:relative}.cw.sm{height:240px}
+h5{font-size:.95rem;font-weight:600;margin-bottom:10px}
+table{color:var(--tx)!important;--bs-table-bg:transparent;--bs-table-color:var(--tx);--bs-table-border-color:var(--line);font-size:13px}
+.table>:not(caption)>*>*{background:transparent;color:var(--tx)}
+.tw{overflow-x:auto;max-height:520px}
+th{position:sticky;top:0;background:#171c3a!important;white-space:nowrap}
+.pill{padding:3px 10px;border-radius:20px;font-size:11.5px;font-weight:600;white-space:nowrap}
+.s-Excellent{background:#34d39933;color:#6ee7b7}.s-Good{background:#22d3ee33;color:#67e8f9}.s-Average{background:#fbbf2433;color:#fcd34d}.s-AtRisk{background:#fb718533;color:#fda4af}
+.ins{display:flex;gap:12px;padding:12px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid var(--line);height:100%}
+.ins .ic{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;flex:none;color:#fff}
+.ins p{margin:2px 0 0;font-size:13px;color:var(--mu)}.ins b{font-size:13.5px}
+.rk{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}.rk:last-child{border:0}
+.rk span:first-child{overflow:hidden;text-overflow:ellipsis}.rk em{font-style:normal;color:var(--c2);font-weight:600;white-space:nowrap}
+.sec{display:none}.sec.on{display:block}
+.modal-content{background:#141935;color:var(--tx);border:1px solid var(--line);border-radius:18px}
+.btn-close{filter:invert(1)}
+.toast-lite{position:fixed;bottom:84px;right:16px;background:#141935;border:1px solid var(--line);padding:10px 16px;border-radius:12px;z-index:99;font-size:13px}
+@media(max-width:991px){
+ .side{inset:auto 0 0 0;width:auto;flex-direction:row;padding:6px;overflow-x:auto;border-top:1px solid var(--line);border-right:0;gap:2px}
+ .brand{display:none}.nv{flex-direction:column;gap:3px;font-size:10.5px;padding:7px 12px;flex:none;align-items:center}
+ main{margin-left:0;padding:16px 12px 100px}}
+@media print{.side,.top .btn-g,.top .btn-o,#filters,.toast-lite{display:none!important}main{margin:0}body{background:#fff;color:#000}.gl{border:1px solid #ccc;background:#fff}*{color:#000!important}}
+</style>
+</head>
+<body>
+<nav class="side" id="nav"></nav>
+<main>
+ <div class="top">
+  <div><h1 id="school">School Analytics</h1><small class="text-secondary" id="src"></small></div>
+  <div class="d-flex gap-2 flex-wrap">
+   <a class="btn-o js-back" href="index.html" style="text-decoration:none"><i class="fa-solid fa-pen-to-square"></i> Marks App</a>
+   <button class="btn-o" onclick="boot()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+   <button class="btn-o" onclick="openCfg()"><i class="fa-solid fa-gear"></i> Settings</button>
+   <button class="btn-o" onclick="window.print()"><i class="fa-solid fa-print"></i> Print</button>
+   <button class="btn-o" onclick="csv()"><i class="fa-solid fa-file-csv"></i> CSV</button>
+   <button class="btn-g" onclick="go('rep')"><i class="fa-solid fa-file-pdf"></i> Generate PDF Report</button>
+  </div>
+ </div>
+ <div class="gl mb-3" id="filters"><div class="row g-2" id="fl"></div><div class="mt-2"><button class="btn-o" onclick="resetF()"><i class="fa-solid fa-filter-circle-xmark"></i> Reset filters</button></div></div>
+
+ <section class="sec on" id="s-home">
+  <div class="row g-3 mb-3" id="kpis"></div>
+  <div class="row g-3"><div class="col-lg-6"><div class="gl h-100"><h5><i class="fa-solid fa-trophy text-warning"></i> Class toppers</h5><div id="toppers"></div></div></div>
+  <div class="col-lg-6"><div class="gl h-100"><h5><i class="fa-solid fa-triangle-exclamation text-danger"></i> Students needing attention</h5><div id="attn"></div></div></div></div>
+ </section>
+
+ <section class="sec" id="s-charts"><div class="row g-3" id="chartGrid"></div></section>
+
+ <section class="sec" id="s-ai">
+  <div class="d-flex justify-content-between mb-2"><h5 class="mb-0"><i class="fa-solid fa-wand-magic-sparkles text-info"></i> AI Insights (computed from filtered data)</h5>
+   <button class="btn-o" onclick="askAI()"><i class="fa-solid fa-robot"></i> Write summary with Claude</button></div>
+  <div class="row g-3 mb-3" id="ins"></div>
+  <div class="gl mb-3"><h5>Recommended actions</h5><ol id="recs" class="mb-0 small"></ol></div>
+  <div class="gl d-none" id="aiBox"><h5>Claude summary</h5><div id="aiTxt" style="white-space:pre-wrap;font-size:13px"></div></div>
+ </section>
+
+ <section class="sec" id="s-stu">
+  <div class="gl"><div class="d-flex gap-2 mb-2 flex-wrap"><input id="q" class="form-control" style="max-width:320px" placeholder="Search name, class, status…" oninput="stuTable()"><button class="btn-o" onclick="csv()"><i class="fa-solid fa-download"></i> Export CSV</button></div>
+  <div class="tw"><table class="table table-sm align-middle"><thead><tr><th>Rank</th><th>Name</th><th>Class</th><th>Att %</th><th>Avg %</th><th>Grade</th><th>Status</th><th>AI recommendation</th></tr></thead><tbody id="stb"></tbody></table></div></div>
+ </section>
+
+ <section class="sec" id="s-rank"><div class="row g-3" id="ranks"></div></section>
+
+ <section class="sec" id="s-rep">
+  <div class="row g-3">
+   <div class="col-lg-6"><div class="gl h-100"><h5><i class="fa-solid fa-file-pdf text-danger"></i> PDF report</h5>
+    <label class="small text-secondary">Report type</label>
+    <select id="rtype" class="form-select mb-2" onchange="stuSel()">
+     <option value="full">Complete Dashboard Report</option><option value="class">Class Report</option><option value="student">Student Report</option>
+     <option value="att">Attendance Report</option><option value="acad">Academic Report</option><option value="ai">AI Analytics Report</option></select>
+    <div id="stuWrap" class="d-none"><label class="small text-secondary">Student</label><select id="rstu" class="form-select mb-2"></select></div>
+    <p class="small text-secondary">The report uses the filters currently selected above.</p>
+    <div class="d-flex gap-2 flex-wrap"><button class="btn-g" onclick="gen()"><i class="fa-solid fa-gears"></i> Generate PDF</button>
+     <button class="btn-o" id="dl" disabled onclick="dlPDF()"><i class="fa-solid fa-download"></i> Download PDF</button>
+     <button class="btn-o" onclick="window.print()"><i class="fa-solid fa-print"></i> Print</button></div></div></div>
+   <div class="col-lg-6"><div class="gl h-100"><h5><i class="fa-brands fa-whatsapp text-success"></i> Share Report on WhatsApp</h5>
+    <label class="small text-secondary">Enter Mobile Number</label>
+    <div class="input-group mb-1"><span class="input-group-text ctl">+91</span><input id="ph" class="form-control" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number"></div>
+    <div class="small text-danger mb-2" id="phErr"></div>
+    <div class="d-flex gap-2 flex-wrap"><button class="btn-g" onclick="gen()">Generate PDF</button><button class="btn-g" style="background:#25d366" onclick="wa()"><i class="fa-brands fa-whatsapp"></i> Share on WhatsApp</button></div>
+    <p class="small text-secondary mt-3 mb-0">On phones that support it, the PDF is attached directly through the share sheet. Otherwise the PDF downloads and WhatsApp opens with a pre-filled message, and you attach the file there. The browser cannot attach files to WhatsApp automatically.</p></div></div>
+  </div>
+ </section>
+</main>
+
+<div class="modal fade" id="cfgM" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content p-3">
+ <h5>Settings</h5>
+ <label class="small text-secondary">School name</label><input id="c-name" class="form-control mb-2">
+ <label class="small text-secondary">Apps Script Web App URL (your Code.gs)</label><input id="c-url" class="form-control mb-2" placeholder="https://script.google.com/macros/s/…/exec">
+ <label class="small text-secondary">PIN (if APP_PIN is set)</label><input id="c-pin" class="form-control mb-2">
+ <label class="small text-secondary">Number of teachers</label><input id="c-t" type="number" class="form-control mb-3">
+ <label class="small text-secondary">Marks app link (set automatically when you open the dashboard from the marks app)</label><input id="c-back" class="form-control mb-3" placeholder="e.g. file:///C:/Users/HP/Downloads/index.html">
+ <p class="small text-secondary">URL and PIN are filled automatically from your marks app when both files are opened from the same place.</p><button class="btn-g" onclick="saveCfg()">Save &amp; load my data</button>
+</div></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.js" onerror="this.onerror=null;var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.2/chart.umd.js';document.head.appendChild(s)"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script>
+/* ================= Config & data ================= */
+const $=id=>document.getElementById(id);
+const EX=['FA1','FA2','FA3','FA4','SA','GT','MMT'], MON=['Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+const PAL=['#7c5cff','#22d3ee','#f472b6','#fbbf24','#34d399','#fb7185','#60a5fa','#a78bfa','#f97316','#2dd4bf'];
+const GR=['A1','A2','B1','B2','C1','C2','D1','D2'], LO=[91,81,71,61,51,41,35,0], PASS=35;
+let cfg=Object.assign({name:'My School',url:'',pin:'',teachers:0},JSON.parse(localStorage.getItem('sad_cfg2')||'{}'));
+try{const m=(JSON.parse(localStorage.getItem('sma_v1')||'{}').cfg)||{};if(m.url){cfg.url=m.url;cfg.pin=m.pin||''}}catch(e){}
+try{const b=new URLSearchParams(location.search).get('back');if(b&&/^(https?|file):/i.test(b))cfg.back=b}catch(e){}
+function setBack(){document.querySelectorAll('.js-back').forEach(a=>a.href=(cfg.back||'index.html')+'?v='+Date.now())}
+let LOADERR='',DB={classes:[],students:[],marks:{},subjects:[]}, V=null, CH={}, LAST=null;
+const avg=a=>{a=a.filter(x=>x!=null&&!isNaN(x));return a.length?a.reduce((x,y)=>x+y,0)/a.length:null}, f1=v=>v==null?'–':(Math.round(v*10)/10).toString();
+const grade=p=>GR[LO.findIndex(l=>Math.round(p)>=l)];
+function rng(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function hash(s){let h=7;for(const c of String(s))h=h*31+c.charCodeAt(0)|0;return Math.abs(h)}
+
+const mx=(sub,a)=>{const b={FA1:50,FA2:50,FA3:50,FA4:50,SA:100,GT:20,MMT:20}[a]||100;return /Physical|Biological/.test(sub)&&(a[0]=='F'||a=='SA')?b/2:b};
+async function live(){
+ const r=await fetch(cfg.url,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'getAll',pin:cfg.pin})});
+ const j=await r.json(); if(!j.ok)throw new Error(j.error);
+ const d=j.data, subs=new Set();
+ DB={classes:d.classes.map(c=>(c.subjects.forEach(s=>subs.add(s)),{id:c.id,name:c.grade+(c.section?'-'+c.section:''),grade:c.grade,section:c.section,year:c.year})),students:[],marks:{},subjects:[]};
+ DB.students=d.students.map(s=>({id:s.id,classId:s.classId,roll:s.roll,name:s.name,gender:null,att:[]}));
+ Object.keys(d.marks).forEach(k=>{const p=k.split('|');DB.marks[k]=(d.marks[k]==='AB'?0:d.marks[k])/mx(p[1],p[2])*100});
+ DB.subjects=[...subs];
+}
+
+/* ================= Filters ================= */
+const FD=[['year','Academic Year'],['cls','Class'],['sec','Section'],['sub','Subject'],['ex','Exam / Term'],['mon','Month']];
+function buildFilters(){
+ const old={};FD.forEach(([k])=>{const e=$('f-'+k);if(e)old[k]=e.value});
+ const opt=(a,all)=>`<option value="all">${all}</option>`+a.map(x=>`<option value="${x[0]}">${x[1]}</option>`).join('');
+ const U=a=>[...new Set(a)];
+ const set={year:opt(U(DB.classes.map(c=>c.year)).map(x=>[x,x]),'All years'),cls:opt(DB.classes.map(c=>[c.id,c.name]),'All classes'),sec:opt(U(DB.classes.map(c=>c.section)).map(x=>[x,'Section '+x]),'All sections'),
+  sub:opt(DB.subjects.map(x=>[x,x]),'All subjects'),ex:opt(EX.map(x=>[x,x]),'All exams'),mon:opt(MON.map((m,i)=>[i,m]),'Whole year')};
+ $('fl').innerHTML=FD.map(([k,l])=>`<div class="col-6 col-md-4 col-xl-2"><label class="small text-secondary">${l}</label><select class="form-select" id="f-${k}" onchange="render()">${set[k]}</select></div>`).join('');
+ FD.forEach(([k])=>{if(old[k]&&[...$('f-'+k).options].some(o=>o.value==old[k]))$('f-'+k).value=old[k]});
+}
+
+/* ================= Analytics ================= */
+function compute(){
+ const fv={};FD.forEach(([k])=>fv[k]=$('f-'+k).value);
+ const cl=DB.classes.filter(c=>(fv.year=='all'||c.year==fv.year)&&(fv.cls=='all'||c.id==fv.cls)&&(fv.sec=='all'||c.section==fv.sec));
+ const cm={};cl.forEach(c=>cm[c.id]=c);
+ const subs=fv.sub=='all'?DB.subjects:[fv.sub], exs=fv.ex=='all'?EX:[fv.ex], mi=fv.mon=='all'?null:+fv.mon;
+ const part=(s,sbs,es)=>{const sp={};sbs.forEach(sb=>{const v=es.map(e=>DB.marks[s.id+'|'+sb+'|'+e]).filter(x=>x!=null);if(v.length)sp[sb]=avg(v)});return sp};
+ let st=DB.students.filter(s=>cm[s.classId]).map(s=>{
+  const sp=part(s,subs,exs),v=Object.values(sp),a=avg(v),att=mi==null?avg(s.att):(s.att[mi]??null);
+  const e1=avg(Object.values(part(s,subs,['FA1','FA2']))),e2=avg(Object.values(part(s,subs,['FA3','FA4','SA'])));
+  const o={id:s.id,name:s.name,roll:s.roll,gender:s.gender,cls:cm[s.classId].name,clsId:s.classId,sp,avg:a,att,pass:v.length&&v.every(x=>x>=PASS),delta:e1!=null&&e2!=null?e2-e1:null,attAll:s.att};
+  return o}).filter(s=>s.avg!=null);
+ st.sort((a,b)=>b.avg-a.avg);
+ const weak=s=>Object.entries(s.sp).sort((a,b)=>a[1]-b[1])[0];
+ st.forEach((s,i)=>{s.rank=i+1;s.grade=grade(s.avg);s.flag=s.avg<45||(s.att!=null&&s.att<75);
+  s.status=s.avg>=80?'Excellent':s.avg>=60?'Good':s.avg>=45?'Average':'At Risk';
+  const w=weak(s);s.rec=(s.att!=null&&s.att<75)?`Meet parents about attendance (${f1(s.att)}%)`+(s.avg<60&&w?`; extra help in ${w[0]}`:''):s.avg<45?`Remedial classes, start with ${w?w[0]:'weak subjects'}`:s.avg>=80?'Give enrichment and olympiad tasks':w&&w[1]<55?`Practice more in ${w[0]}`:'Keep up current effort'});
+ const cs=cl.map(c=>{const x=st.filter(s=>s.clsId==c.id);return{name:c.name,id:c.id,n:x.length,tot:DB.students.filter(s=>s.classId==c.id).length,avg:avg(x.map(s=>s.avg)),att:avg(x.map(s=>s.att)),pass:x.length?x.filter(s=>s.pass).length/x.length*100:null,top:x[0]}}).filter(c=>c.n);
+ const ss=subs.map(sb=>{const x=st.filter(s=>s.sp[sb]!=null);return{sub:sb,avg:avg(x.map(s=>s.sp[sb])),pass:x.length?x.filter(s=>s.sp[sb]>=PASS).length/x.length*100:null,top:x.sort((a,b)=>b.sp[sb]-a.sp[sb])[0]}}).filter(s=>s.avg!=null);
+ const tr=cl.map(c=>({name:c.name,d:EX.map(e=>avg(st.filter(s=>s.clsId==c.id).map(s=>avg(subs.map(sb=>DB.marks[s.id+'|'+sb+'|'+e]).filter(x=>x!=null))).filter(x=>x!=null)))}));
+ const n=st.length,boys=st.filter(s=>s.gender=='Boy').length,gd=GR.map(g=>st.filter(s=>s.grade==g).length);
+ const R={fv,cl,st,cs,ss,tr,n,boys,girls:st.filter(s=>s.gender=='Girl').length,hasG:st.some(s=>s.gender),total:DB.students.filter(s=>cm[s.classId]).length,gd,mi,
+  att:avg(st.map(s=>s.att)),avg:avg(st.map(s=>s.avg)),pass:n?st.filter(s=>s.pass).length/n*100:null,attn:st.filter(s=>s.flag),
+  mon:MON.map((m,i)=>avg(st.map(s=>s.attAll[i]))),imp:st.filter(s=>s.delta!=null).sort((a,b)=>b.delta-a.delta)};
+ R.ins=insights(R);return R;
+}
+function insights(R){
+ const I=[],A=[],by=(a,k)=>a.slice().sort((x,y)=>y[k]-x[k]);
+ if(!R.n)return{cards:[{ic:'fa-circle-info',c:PAL[0],t:'No data',x:'No students match the filters.'}],recs:[]};
+ const bc=by(R.cs,'avg'),bs=by(R.ss,'avg'),ws=R.ss.slice().sort((a,b)=>a.avg-b.avg).filter(s=>s.avg<60).slice(0,3),lowA=R.cs.filter(c=>c.att!=null&&c.att<85),lowS=R.st.filter(s=>s.att!=null&&s.att<75);
+ I.push({ic:'fa-crown',c:PAL[3],t:'Best performing class',x:`${bc[0].name} leads with ${f1(bc[0].avg)}% average and ${f1(bc[0].pass)}% pass.`+(bc.length>1?` Lowest: ${bc[bc.length-1].name} (${f1(bc[bc.length-1].avg)}%).`:'')});
+ if(bs.length)I.push({ic:'fa-book-open',c:PAL[4],t:'Best subject',x:`${bs[0].sub} is strongest at ${f1(bs[0].avg)}% average.`});
+ I.push({ic:'fa-chart-line',c:PAL[5],t:'Weak subjects',x:ws.length?ws.map(s=>`${s.sub} (${f1(s.avg)}%)`).join(', ')+' are below 60%.':'No subject averages below 60%.'});
+ I.push({ic:'fa-calendar-xmark',c:PAL[1],t:'Low attendance',x:R.att==null?'Attendance is not recorded in your sheet yet.':lowS.length?`${lowS.length} student(s) are below 75%.`+(lowA.length?` Classes under 85%: ${lowA.map(c=>c.name).join(', ')}.`:''):'No student is below 75% attendance.'});
+ I.push({ic:'fa-user-shield',c:PAL[2],t:'Students needing attention',x:R.attn.length?`${R.attn.length} students: ${R.attn.slice(-4).map(s=>s.name+' ('+s.cls+')').join(', ')}${R.attn.length>4?'…':''}.`:'None flagged.'});
+ const up=R.imp[0],dn=R.imp[R.imp.length-1];
+ I.push({ic:'fa-arrow-trend-up',c:PAL[6],t:'Improvement and decline',x:up&&up.delta>0?`Most improved: ${up.name} (+${f1(up.delta)} pts). `+(dn.delta<0?`Biggest decline: ${dn.name} (${f1(dn.delta)} pts).`:''):'Not enough exam history to compare.'});
+ if(ws.length)A.push(`Run remedial sessions in ${ws.map(s=>s.sub).join(', ')} and review lesson plans with those subject teachers.`);
+ if(R.attn.length)A.push(`Assign mentors to the ${R.attn.length} flagged students and review progress after the next formative test.`);
+ if(lowS.length)A.push(`Call parents of the ${lowS.length} students below 75% attendance this week.`);
+ if(R.pass<90)A.push(`Pass rate is ${f1(R.pass)}%. Hold extra revision before the next Summative Assessment.`);
+ A.push(`Share best practices from ${bc[0].name} with other sections, and give toppers enrichment work.`);
+ return{cards:I,recs:A};
+}
+
+/* ================= Charts ================= */
+function cfgs(R){
+ const pct={y:{min:0,max:100}},cols=(n)=>Array.from({length:n},(_,i)=>PAL[i%PAL.length]);
+ const bar=(l,d,o={})=>({type:'bar',data:{labels:l,datasets:[{data:d,backgroundColor:cols(d.length),borderRadius:6}]},options:Object.assign({scales:pct,plugins:{legend:{display:false}}},o)});
+ const pie=(t,l,d,c)=>({type:t,data:{labels:l,datasets:[{data:d,backgroundColor:c||cols(d.length),borderWidth:0}]},options:{plugins:{legend:{position:'right',labels:{boxWidth:10}}}}});
+ const t10=R.st.slice(0,10);
+ const K={
+  strength:{t:'Class-wise student strength',c:Object.assign(bar(R.cs.map(c=>c.name),R.cs.map(c=>c.tot)),{options:{scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}}}})},
+  gender:{t:'Boys vs Girls',c:pie('doughnut',['Boys','Girls'],[R.boys,R.girls],['#60a5fa','#f472b6'])},
+  clsAtt:{t:'Class-wise attendance %',c:bar(R.cs.map(c=>c.name),R.cs.map(c=>+f1(c.att)))},
+  monAtt:{t:'Monthly attendance %',c:{type:'line',data:{labels:MON,datasets:[{data:R.mon,borderColor:'#22d3ee',backgroundColor:'#22d3ee33',fill:true,tension:.35,pointRadius:4}]},options:{scales:{y:{min:50,max:100}},plugins:{legend:{display:false}}}}},
+  clsAvg:{t:'Class-wise average marks',c:bar(R.cs.map(c=>c.name),R.cs.map(c=>+f1(c.avg)))},
+  subj:{t:'Subject-wise performance',c:{type:'radar',data:{labels:R.ss.map(s=>s.sub),datasets:[{label:'Avg %',data:R.ss.map(s=>+f1(s.avg)),borderColor:'#f472b6',backgroundColor:'#f472b633',pointBackgroundColor:'#fbbf24'}]},options:{scales:{r:{min:0,max:100,grid:{color:'#8883'},angleLines:{color:'#8883'},ticks:{backdropColor:'transparent'}}}}}},
+  pf:{t:'Pass vs Fail',c:pie('pie',['Pass','Fail'],[R.st.filter(s=>s.pass).length,R.st.filter(s=>!s.pass).length],['#34d399','#fb7185'])},
+  grades:{t:'Grade distribution',c:pie('doughnut',GR,R.gd)},
+  top10:{t:'Top 10 students',c:bar(t10.map(s=>s.name),t10.map(s=>+f1(s.avg)),{indexAxis:'y',scales:{x:{min:0,max:100}}})},
+  trend:{t:'Performance trends (avg % by exam)',c:{type:'line',data:{labels:EX,datasets:R.tr.map((x,i)=>({label:x.name,data:x.d.map(v=>v==null?null:+f1(v)),borderColor:PAL[i%10],backgroundColor:PAL[i%10],tension:.35,spanGaps:true}))},options:{scales:{y:{min:0,max:100}},plugins:{legend:{position:'bottom',labels:{boxWidth:10}}}}}}
+ };
+ if(R.att==null){delete K.clsAtt;delete K.monAtt}if(!R.hasG)delete K.gender;return K;
+}
+const base=()=>({responsive:true,maintainAspectRatio:false});
+function drawCharts(){
+ Object.values(CH).forEach(c=>c.destroy());CH={};
+ const g=$('chartGrid'),msg=t=>g.innerHTML=`<div class="col-12"><div class="gl text-center py-5">${t}</div></div>`;
+ if(!chartsReady())return msg('The chart library could not load. Check your internet connection or ad-blocker, then reload this page.');
+ if(!V.n)return msg('No marks found for the selected filters. <br><button class="btn-g mt-3" onclick="resetF()">Reset filters</button>');
+ try{
+  const K=cfgs(V);
+  g.innerHTML=Object.keys(K).map(k=>`<div class="col-md-6 ${k=='trend'?'col-xl-12':'col-xl-4'}"><div class="gl"><h5>${K[k].t}</h5><div class="cw sm"><canvas id="ch-${k}"></canvas></div></div></div>`).join('');
+  Object.keys(K).forEach(k=>{const c=K[k].c;c.options=Object.assign(base(),c.options);CH[k]=new Chart($('ch-'+k),c)});
+ }catch(e){msg('Could not draw charts: '+e.message)}
+}
+function resetF(){FD.forEach(([k])=>$('f-'+k).value='all');render()}
+function chartImg(k){
+ if(!chartsReady())throw new Error('Chart library not loaded');
+ const dc={c:Chart.defaults.color,b:Chart.defaults.borderColor};Chart.defaults.color='#333';Chart.defaults.borderColor='#0001';
+ const cv=document.createElement('canvas');cv.width=560;cv.height=290;const c=cfgs(V)[k].c;c.options=Object.assign({responsive:false,animation:false},c.options);
+ const ch=new Chart(cv,c);ch.update();const u=cv.toDataURL('image/png',1);ch.destroy();Chart.defaults.color=dc.c;Chart.defaults.borderColor=dc.b;return u;
+}
+
+/* ================= Views ================= */
+const TABS=[['home','fa-house','Dashboard'],['charts','fa-chart-pie','Charts'],['ai','fa-wand-magic-sparkles','AI Insights'],['stu','fa-user-graduate','Students'],['rank','fa-ranking-star','Rankings'],['rep','fa-file-pdf','Reports']];
+$('nav').innerHTML=`<div class="brand"><div class="logo"><i class="fa-solid fa-graduation-cap"></i></div><span id="bn"></span></div>`+TABS.map(t=>`<button class="nv" data-t="${t[0]}" onclick="go('${t[0]}')"><i class="fa-solid ${t[1]}"></i>${t[2]}</button>`).join('')+'<a class="nv js-back" href="index.html" style="text-decoration:none;margin-top:auto"><i class="fa-solid fa-pen-to-square"></i>Marks App</a><div class="small text-secondary px-3 d-none d-lg-block">Dashboard version 6</div>';
+function go(t){document.querySelectorAll('.sec').forEach(s=>s.classList.toggle('on',s.id=='s-'+t));document.querySelectorAll('.nv').forEach(b=>b.classList.toggle('on',b.dataset.t==t));if(t=='charts')drawCharts();scrollTo(0,0)}
+const li=(a,fn)=>a.length?a.map(fn).join(''):'<div class="text-secondary small">No data for these filters.</div>';
+function render(){
+ V=compute();const R=V;
+ $('school').textContent=cfg.name;$('bn').textContent=cfg.name;
+ $('src').textContent='Dashboard build v8 · 2026-10-10 · '+(!cfg.url?'Not connected. Open Settings and enter your Apps Script URL.':LOADERR?'Could not load data: '+LOADERR+'. Check URL and PIN in Settings.':!DB.classes.length?'Connected, but your sheet has no classes yet. In the marks app open Settings and upload your data.':'Live data from your Google Sheet. Gender and attendance are not stored in the sheet, so they show as -.');
+ const K=[['Total Students',R.total,'fa-users'],['Boys',R.hasG?R.boys:'–','fa-person'],['Girls',R.hasG?R.girls:'–','fa-person-dress'],['Teachers',cfg.teachers||'–','fa-chalkboard-user'],['Average Marks',f1(R.avg)+'%','fa-pen-to-square'],['Pass %',f1(R.pass)+'%','fa-circle-check'],['Class Toppers',R.cs.length,'fa-trophy'],['Needing Attention',R.attn.length,'fa-triangle-exclamation']];
+ $('kpis').innerHTML=K.map((k,i)=>`<div class="col-6 col-md-4 col-xl"><div class="kpi k${i}"><i class="fa-solid ${k[2]}"></i><small>${k[0]}</small><b>${k[1]}</b></div></div>`).join('');
+ $('toppers').innerHTML=li(R.cs,c=>`<div class="rk"><span><b>${c.name}</b> ${c.top.name}</span><em>${f1(c.top.avg)}%</em></div>`);
+ $('attn').innerHTML=li(R.attn.slice(-8).reverse(),s=>`<div class="rk"><span>${s.name} <small class="text-secondary">${s.cls}</small></span><em class="text-danger">${f1(s.avg)}%${s.att!=null?' · '+f1(s.att)+'% att':''}</em></div>`);
+ $('ins').innerHTML=R.ins.cards.map(c=>`<div class="col-md-6 col-xl-4"><div class="ins"><div class="ic" style="background:${c.c}"><i class="fa-solid ${c.ic}"></i></div><div><b>${c.t}</b><p>${c.x}</p></div></div></div>`).join('');
+ $('recs').innerHTML=R.ins.recs.map(r=>`<li class="mb-1">${r}</li>`).join('');
+ const rk=(id,t,a,fn)=>`<div class="col-md-6 col-xl-4"><div class="gl h-100"><h5>${t}</h5>${li(a,fn)}</div></div>`;
+ const row=(n,sub,v)=>`<div class="rk"><span>${n} <small class="text-secondary">${sub}</small></span><em>${v}</em></div>`;
+ $('ranks').innerHTML=rk('','School Top 10',R.st.slice(0,10),s=>row(s.rank+'. '+s.name,s.cls,f1(s.avg)+'%'))+rk('','Class toppers',R.cs,c=>row(c.name,c.top.name,f1(c.top.avg)+'%'))+
+  rk('','Subject toppers',R.ss,s=>row(s.sub,s.top.name,f1(s.top.sp[s.sub])+'%'))+rk('','Highest attendance',R.st.filter(s=>s.att!=null).sort((a,b)=>b.att-a.att).slice(0,10),s=>row(s.name,s.cls,f1(s.att)+'%'))+
+  rk('','Most improved',R.imp.slice(0,10),s=>row(s.name,s.cls,'+'+f1(s.delta)+' pts'));
+ stuTable();stuSel();
+ if($('s-charts').classList.contains('on'))drawCharts();
+}
+function stuTable(){
+ const q=$('q').value.toLowerCase();
+ $('stb').innerHTML=V.st.filter(s=>(s.name+s.cls+s.status+s.grade).toLowerCase().includes(q)).map(s=>`<tr><td>${s.rank}</td><td>${s.name}</td><td>${s.cls}</td><td>${f1(s.att)}</td><td>${f1(s.avg)}</td><td>${s.grade}</td><td><span class="pill s-${s.status.replace(' ','')}">${s.status}</span></td><td class="small text-secondary">${s.rec}</td></tr>`).join('')||'<tr><td colspan="8" class="text-secondary">No students found.</td></tr>';
+}
+function stuSel(){$('stuWrap').classList.toggle('d-none',$('rtype').value!='student');$('rstu').innerHTML=V.st.map(s=>`<option value="${s.id}">${s.name} (${s.cls})</option>`).join('')}
+function csv(){
+ const h=['Rank','Name','Class','Attendance %','Average %','Grade','Status','Recommendation'];
+ const t=[h].concat(V.st.map(s=>[s.rank,s.name,s.cls,f1(s.att),f1(s.avg),s.grade,s.status,s.rec])).map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(',')).join('\n');
+ save(new Blob(['\ufeff'+t],{type:'text/csv'}),'students.csv');
+}
+function save(b,n){const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=n;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}
+function toast(m){const t=document.createElement('div');t.className='toast-lite';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3200)}
+
+/* ================= PDF ================= */
+const TITLES={full:'Complete Dashboard Report',class:'Class Report',student:'Student Report',att:'Attendance Report',acad:'Academic Report',ai:'AI Analytics Report'};
+function gen(){
+ if(!window.jspdf){toast('PDF library did not load. Check your internet connection.');return}
+ if(!chartsReady()){toast('Chart library could not load. Reload the page.');return}
+ const type=$('rtype').value,R=V;if(!R.n){toast('No data to report. Change the filters.');return}if(type=='att'&&R.att==null){toast('Attendance is not recorded in your sheet yet.');return}
+ const d=new jspdf.jsPDF({unit:'pt',format:'a4'}),W=595,H=842;let y=0;
+ const hdr=()=>{d.setFillColor(88,64,210);d.rect(0,0,W,74,'F');d.setFillColor(244,114,182);d.circle(52,37,20,'F');d.setTextColor(255);d.setFont('helvetica','bold');d.setFontSize(18);d.text((cfg.name[0]||'S').toUpperCase(),52,43,{align:'center'});
+  d.setFontSize(17);d.text(cfg.name,84,32);d.setFontSize(11);d.setFont('helvetica','normal');d.text(TITLES[type]+'  |  '+new Date().toLocaleDateString('en-IN'),84,52);d.setTextColor(30);y=96};
+ const need=h=>{if(y+h>H-40){d.addPage();y=40}};
+ const hd=t=>{need(40);d.setFont('helvetica','bold');d.setFontSize(13);d.setTextColor(88,64,210);d.text(t,40,y);y+=8;d.setTextColor(30)};
+ const tb=(head,body,col)=>{need(60);d.autoTable({startY:y+4,head:[head],body,styles:{fontSize:8.5,cellPadding:4},headStyles:{fillColor:col||[124,92,255]},alternateRowStyles:{fillColor:[243,240,255]},margin:{left:40,right:40}});y=d.lastAutoTable.finalY+18};
+ const KS=cfgs(R);const pair=(a,b)=>{const ks=[a,b].filter(k=>KS[k]);if(!ks.length)return;need(150);ks.forEach((k,i)=>d.addImage(chartImg(k),'PNG',40+i*262,y,253,131));y+=142};
+ const fl=R.fv,txt=`Filters: Year ${fl.year}, Class ${fl.cls=='all'?'All':DB.classes.find(c=>c.id==fl.cls).name}, Subject ${fl.sub}, Exam ${fl.ex}, Month ${fl.mon=='all'?'Whole year':MON[fl.mon]}`;
+ hdr();d.setFontSize(8.5);d.setTextColor(110);d.text(txt,40,y-8);d.setTextColor(30);y+=8;
+ const kp=()=>{hd('Key figures');tb(['Students','Boys','Girls','Teachers','Avg marks','Pass %','Need attention'],[[R.total,R.hasG?R.boys:'-',R.hasG?R.girls:'-',cfg.teachers||'-',f1(R.avg)+'%',f1(R.pass)+'%',R.attn.length]])};
+ const cls=()=>{hd('Class summary');tb(['Class','Students','Avg %','Attendance %','Pass %','Topper'],R.cs.map(c=>[c.name,c.n,f1(c.avg),f1(c.att),f1(c.pass),c.top.name+' ('+f1(c.top.avg)+'%)']))};
+ const top=()=>{hd('Top 10 students');tb(['Rank','Name','Class','Avg %','Grade','Attendance %'],R.st.slice(0,10).map(s=>[s.rank,s.name,s.cls,f1(s.avg),s.grade,f1(s.att)]))};
+ const att=()=>{hd('Students needing attention');tb(['Name','Class','Avg %','Att %','Recommendation'],R.attn.slice(-25).reverse().map(s=>[s.name,s.cls,f1(s.avg),f1(s.att),s.rec]),[251,113,133])};
+ const ai=()=>{hd('AI insights');tb(['Insight','Finding'],R.ins.cards.map(c=>[c.t,c.x]));hd('Recommended actions');R.ins.recs.forEach(r=>{const l=d.splitTextToSize('- '+r,510);need(l.length*12+4);d.setFontSize(9.5);d.text(l,42,y+10);y+=l.length*12+4});y+=10};
+ const subs=()=>{hd('Subject performance');tb(['Subject','Avg %','Pass %','Topper'],R.ss.map(s=>[s.sub,f1(s.avg),f1(s.pass),s.top.name+' ('+f1(s.top.sp[s.sub])+'%)']))};
+ if(type=='full'){kp();pair('strength','gender');pair('clsAtt','monAtt');pair('clsAvg','subj');pair('pf','grades');pair('top10','trend');cls();subs();top();att();ai()}
+ else if(type=='class'){kp();cls();pair('clsAvg','clsAtt');pair('grades','pf');top();att()}
+ else if(type=='att'){hd('Attendance');tb(['Class','Attendance %','Students'],R.cs.map(c=>[c.name,f1(c.att),c.n]));pair('clsAtt','monAtt');hd('Lowest attendance');tb(['Name','Class','Att %','Avg %'],R.st.slice().sort((a,b)=>a.att-b.att).slice(0,20).map(s=>[s.name,s.cls,f1(s.att),f1(s.avg)]),[8,145,166])}
+ else if(type=='acad'){kp();subs();pair('subj','clsAvg');pair('grades','pf');pair('trend','top10');top();hd('Most improved');tb(['Name','Class','Change (pts)'],R.imp.slice(0,10).map(s=>[s.name,s.cls,'+'+f1(s.delta)]))}
+ else if(type=='ai'){ai();pair('subj','clsAvg');att()}
+ else{const s=R.st.find(x=>x.id==$('rstu').value);hd('Student profile');tb(['Name','Class','Rank','Average','Grade','Attendance','Status'],[[s.name,s.cls,s.rank+' of '+R.n,f1(s.avg)+'%',s.grade,(s.att==null?'-':f1(s.att)+'%'),s.status]]);
+  hd('Subject-wise marks');tb(['Subject','Student %','Grade','Class avg %'],Object.keys(s.sp).map(k=>[k,f1(s.sp[k]),grade(s.sp[k]),f1(R.ss.find(x=>x.sub==k)?.avg)]));
+  const ex=EX.map(e=>avg(Object.keys(s.sp).map(k=>DB.marks[s.id+'|'+k+'|'+e]).filter(x=>x!=null)));hd('Exam-wise average');tb(EX,[ex.map(f1)]);
+  hd('AI recommendation');const l=d.splitTextToSize(s.rec+'. '+(s.delta!=null?`Change since early assessments: ${s.delta>=0?'+':''}${f1(s.delta)} points.`:''),510);d.setFontSize(10);d.text(l,42,y+12);y+=l.length*13+10}
+ const n=d.getNumberOfPages();for(let i=1;i<=n;i++){d.setPage(i);d.setFontSize(8);d.setTextColor(130);d.text(cfg.name+' | Page '+i+' of '+n,W/2,H-20,{align:'center'})}
+ LAST={blob:d.output('blob'),name:(cfg.name+' '+TITLES[type]).replace(/\W+/g,'_')+'.pdf',title:TITLES[type]};
+ $('dl').disabled=false;toast('PDF ready. Download or share it.');return LAST;
+}
+function dlPDF(){if(LAST)save(LAST.blob,LAST.name)}
+async function wa(){
+ const p=$('ph').value.replace(/\D/g,'');
+ if(!/^[6-9]\d{9}$/.test(p)){$('phErr').textContent='Enter a valid 10-digit Indian mobile number starting with 6, 7, 8 or 9.';return}
+ $('phErr').textContent='';if(!LAST&&!gen())return;
+ const msg=`Hello, please find the ${LAST.title} of ${cfg.name} dated ${new Date().toLocaleDateString('en-IN')}.`;
+ const file=new File([LAST.blob],LAST.name,{type:'application/pdf'});
+ if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],text:msg,title:LAST.title});return}catch(e){if(e.name=='AbortError')return}}
+ dlPDF();toast('PDF downloaded. Attach it in the WhatsApp chat that opens.');
+ window.open('https://wa.me/91'+p+'?text='+encodeURIComponent(msg+' (PDF attached separately)'),'_blank','noopener');
+}
+
+/* ================= AI + settings ================= */
+async function askAI(){
+ const R=V;if(!cfg.url){toast('Connect your Apps Script in Settings to use Claude.');return}
+ const prompt=`You are an academic coordinator in an Andhra Pradesh school. Write a short plain-text summary (under 180 words) and 4 action points for the principal.\nStudents ${R.n}; avg ${f1(R.avg)}%; pass ${f1(R.pass)}%; attendance ${f1(R.att)}%.\nClasses: ${R.cs.map(c=>c.name+' '+f1(c.avg)+'%').join('; ')}\nSubjects: ${R.ss.map(s=>s.sub+' '+f1(s.avg)+'%').join('; ')}\nFlagged students: ${R.attn.length}.`;
+ $('aiBox').classList.remove('d-none');$('aiTxt').textContent='Thinking…';
+ try{const r=await fetch(cfg.url,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'aiFeedback',pin:cfg.pin,prompt})});const j=await r.json();$('aiTxt').textContent=j.ok?j.data:'Error: '+j.error}catch(e){$('aiTxt').textContent='Error: '+e.message}
+}
+const cm=()=>bootstrap.Modal.getOrCreateInstance($('cfgM'));
+function openCfg(){$('c-name').value=cfg.name;$('c-url').value=cfg.url;$('c-pin').value=cfg.pin;$('c-t').value=cfg.teachers;$('c-back').value=cfg.back||'';cm().show()}
+async function saveCfg(){
+ cfg.name=$('c-name').value.trim()||'My School';cfg.url=$('c-url').value.trim();cfg.pin=$('c-pin').value.trim();cfg.teachers=+$('c-t').value||0;{const b=$('c-back').value.trim();cfg.back=/^(https?|file):/i.test(b)?b:''}
+ await boot();cm().hide();
+}
+async function boot(){
+ DB={classes:[],students:[],marks:{},subjects:[]};LOADERR='';
+ if(cfg.url){try{toast('Loading your data…');await live()}catch(e){LOADERR=e.message;toast('Could not load data: '+e.message)}}
+ try{localStorage.setItem('sad_cfg2',JSON.stringify(cfg))}catch(e){}
+ setBack();buildFilters();render();go($('nav').querySelector('.nv.on')?.dataset.t||'home');
+ if(!cfg.url)openCfg();
+}
+boot();
+function chartsReady(){if(!window.Chart)return false;if(!Chart._ok){Chart.defaults.color='#c7cbe6';Chart.defaults.borderColor='rgba(255,255,255,.1)';Chart.defaults.font.family='Sora,sans-serif';Chart._ok=1}return true}
+</script>
+</body>
+</html>
